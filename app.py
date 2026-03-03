@@ -1,6 +1,9 @@
 from flask import Flask, request
 import requests
 from bs4 import BeautifulSoup
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 
@@ -14,7 +17,7 @@ def goal():
 
     if scrape_value == "example":
         url = "https://example.com"
-        response = requests.get(url)
+        response = requests.get(url, verify=False)
         soup = BeautifulSoup(response.text, "html.parser")
         return f"Result: {soup.title.string}"
 
