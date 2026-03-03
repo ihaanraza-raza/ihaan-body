@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import requests
 from bs4 import BeautifulSoup
 
@@ -8,19 +8,17 @@ app = Flask(__name__)
 def home():
     return "IHAAN Body Running"
 
-@app.route("/goal", methods=["POST"])
+@app.route("/goal")
 def goal():
-    data = request.get_json()
-    goal_text = data.get("goal", "")
+    scrape_value = request.args.get("scrape")
 
-    if "scrape example" in goal_text.lower():
+    if scrape_value == "example":
         url = "https://example.com"
         response = requests.get(url)
         soup = BeautifulSoup(response.text, "html.parser")
-        title = soup.title.string
-        return jsonify({"status": "completed", "result": title})
+        return f"Result: {soup.title.string}"
 
-    return jsonify({"status": "unknown goal"})
+    return "No valid goal provided"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
